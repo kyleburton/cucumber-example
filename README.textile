@@ -1,0 +1,16 @@
+h1. Cucumber Rails Example
+
+Example Rails application with Cucumber tests.
+
+Demonstrates how to get cucumber configured, write feature tests, how to
+organize step definitions and manage test fixture data.
+
+h2. Required Software
+
+If you're on Linux or OS X, these are either on your system already, or at most a few minutes away via @aptitude@, @yum@, or "@homebrew@":http://github.com/mxcl/homebrew
+
+* Ruby 
+* Rails
+* Rubygems
+
+
