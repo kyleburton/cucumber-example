@@ -1,9 +1,18 @@
-h1. Cucumber Rails Example
+h1. Testing Rails Applications with Cucumber and Crhome
 
-Example Rails application with Cucumber tests.
+Example application showing how to use "Cucumber":http://cukes.info/ to test a "Ruby on Rails":http://rubyonrails.org/ web application with the "Google Chrome":http://www.google.com/chrome/?brand=CHMB&utm_campaign=en&utm_source=en-ha-na-us-sk&utm_medium=ha browser.
 
-Demonstrates how to get cucumber configured, write feature tests, how to
-organize step definitions and manage test fixture data.
+This example uses "Waitr-Webdriver":http://github.com/jarib/watir-webdriver and Chrome, the "Cucumber":http://wiki.github.com/aslakhellesoy/cucumber/ project has instruction for using other frameworks and browsers with Cucumber.
+
+The example shows how to get cucumber installed and configured, organize and write your feature tests, how to organize step definitions and some ways for managing test fixture data.
+
+h2. Webdriver
+
+"Webdriver":http://code.google.com/p/selenium/ is a browser automation framework, and as of June 2010 it is being merged with "Selenium":http://code.google.com/p/selenium/.  This is the part of the framework that scripts the web browser.  Webdriver/Selenium support "multiple browsers":http://code.google.com/p/selenium/wiki/NextSteps, though this example only shows using Chrome.
+
+h2. Waitr
+
+"Watir":http://watir.com/ is a browser automation framework.  "Waitr-webdriver":http://github.com/jarib/watir-webdriver is a Watir implementation on top of WebDriver.  This provides a higher level API than Webdriver alone, making it easier for you to write your feature step support code.
 
 h2. Required Software
 
@@ -13,4 +22,53 @@ If you're on Linux or OS X, these are either on your system already, or at most 
 * Rails
 * Rubygems
 
+Gems
 
+* cucumber
+* cucumber-rails
+* webrat
+* selenium-webdriver
+* watir-webdriver (--pre is required as of 2010-06-09)
+
+<pre>
+$ gem install cucumber
+$ gem install cucumber-rails
+$ gem install webrat
+$ gem install selenium-webdriver
+$ gem install watir-webdriver --pre
+$ rails cukeex
+$ cd cukeex
+$ script/generate cucumber --webrat
+$ rake RAILS_ENV=cucumber gems:install
+</pre>
+
+The cucumber plugin generates several files and modifies others:
+
+h3. @config/cucumber.yml@
+
+This configuration controls the running of Cucumber itself.  It controls default options for things like output format.  I preferr the more verbose, colored output that @pretty@ gives over @progress@ so I made a 1 line change, modifying:
+
+<pre>
+std_opts = "--format #{ENV['CUCUMBER_FORMAT'] || 'progress'} --strict --tags ~@wip"
+</pre>
+
+to use @pretty@:
+
+<pre>
+std_opts = "--format #{ENV['CUCUMBER_FORMAT'] || 'pretty'} --strict --tags ~@wip"
+</pre>
+
+* @config/environments/cucumber.rb@
+* @script/cucumber@
+* @features/step_definitions/web_steps.rb@
+* @features/support/env.rb@
+* @features/support/paths.rb@
+* @lib/tasks/cucumber.rake@
+
+
+h2. References
+
+* "Cukes.info":http://cukes.info/
+* "Watir on Webdriver":http://zeljkofilipin.com/2010/01/12/watir-on-webdriver/
+* "Cucumber: Faster Feature Development using Spork and DRb":http://wiki.github.com/aslakhellesoy/cucumber/spork-and-drb
+* "Testjour":http://github.com/brynary/testjour
