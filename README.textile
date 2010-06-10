@@ -2,17 +2,23 @@ h1. Testing Rails Applications with Cucumber and Crhome
 
 Example application showing how to use "Cucumber":http://cukes.info/ to test a "Ruby on Rails":http://rubyonrails.org/ web application with the "Google Chrome":http://www.google.com/chrome/?brand=CHMB&utm_campaign=en&utm_source=en-ha-na-us-sk&utm_medium=ha browser.
 
+Cucumber is a feature driven testing framework.  It uses an English-like language called "Gherkin":http://wiki.github.com/aslakhellesoy/cucumber/gherkin for writing tests and can be used to drive a Web Browser just like a user of your web application would, providing a testing experience very close to what your actual users would be seeing and experiencing.
+
 This example uses "Waitr-Webdriver":http://github.com/jarib/watir-webdriver and Chrome, the "Cucumber":http://wiki.github.com/aslakhellesoy/cucumber/ project has instruction for using other frameworks and browsers with Cucumber.
 
 The example shows how to get cucumber installed and configured, organize and write your feature tests, how to organize step definitions and some ways for managing test fixture data.
 
-h2. Webdriver
+h3. Webdriver
 
 "Webdriver":http://code.google.com/p/selenium/ is a browser automation framework, and as of June 2010 it is being merged with "Selenium":http://code.google.com/p/selenium/.  This is the part of the framework that scripts the web browser.  Webdriver/Selenium support "multiple browsers":http://code.google.com/p/selenium/wiki/NextSteps, though this example only shows using Chrome.
 
-h2. Waitr
+h3. Waitr
 
 "Watir":http://watir.com/ is a browser automation framework.  "Waitr-webdriver":http://github.com/jarib/watir-webdriver is a Watir implementation on top of WebDriver.  This provides a higher level API than Webdriver alone, making it easier for you to write your feature step support code.
+
+h3. Webrat
+
+"Webrat":http://github.com/brynary/webrat is an acceptance testing framework, like "Rspec":http://rspec.info/, for Ruby.  It provides higher level API functions for operating the browser and making assertions.
 
 h2. Required Software
 
@@ -58,13 +64,107 @@ to use @pretty@:
 std_opts = "--format #{ENV['CUCUMBER_FORMAT'] || 'pretty'} --strict --tags ~@wip"
 </pre>
 
-* @config/environments/cucumber.rb@
-* @script/cucumber@
-* @features/step_definitions/web_steps.rb@
-* @features/support/env.rb@
-* @features/support/paths.rb@
-* @lib/tasks/cucumber.rake@
+h3. @config/environments/cucumber.rb@
 
+Configuration for cucumber's execution, including gem dependencies, which were installed earlier when we ran:
+
+<pre>
+$ rake RAILS_ENV=cucumber gems:install
+</pre>
+
+h3. @script/cucumber@
+
+Runner for cucumber.  This runner supports runing your entire suite (with no arguments), individual features or even individual scenarios.  I will show you how to run cucumber a few diferent ways, you should read "Running Features":http://wiki.github.com/aslakhellesoy/cucumber/running-features and "Tags":http://wiki.github.com/aslakhellesoy/cucumber/tags for a more in-depth guide for running Cucumber.
+
+h3. @features/step_definitions/web_steps.rb@
+
+This is a default set of step definitions that you can use from your "Gherkin":http://wiki.github.com/aslakhellesoy/cucumber/gherkin
+
+h3. @features/support/env.rb@
+
+Initialization for the Cucumber runner, "Webrat":http://github.com/brynary/webrat
+
+h3. @features/support/paths.rb@
+
+A helper to the "I am on X" and "I go to X" steps in @web_steps@.  You will need to modify this to add logically named paths for your application so that the feature tests read logically and don't have URI paths hard-coded in them.  The generated file has a 'home' path mapped to '/', allowing you to use a step that states "Given I go to home".
+
+h3. @lib/tasks/cucumber.rake@
+
+Defines Rake tasks for executing cucumber.
+
+h2. Post Generation
+
+FIXME: finish this section
+
+h2. Fixture Data
+
+FIXME: finish this section
+
+h2. Running Cucumber
+
+h3. @script/cucumber-runner@
+
+Cucumber doesn't start, stop or otherwise run your web server, that's not its role.  The additional script "@script/cucumber-runner@":tree/master/cukeex/script/cucumber-runner.  When Cucumber starts the web browser, on all the platforms I've used, it pops up to the front stealing the application focus, effectively keeping you from continuing to use the machine.  @cucumber-runner@ provides a solution to this on Linux (X11) based environments by running the browser within "Xnest":http://en.wikipedia.org/wiki/Xnest, allowing you to alt-tab or otherwise switch away from the running tests.  It's also possible to run the Xnest at your target desktop resolution so you can see what your site will probbly look like.
+
+h3. Runner Features
+
+FIXME: finish this section
+
+h4. Pretty Output
+
+FIXME: finish this section
+
+h4. Running a single test
+
+FIXME: finish this section
+
+By line number, by tags, by cutting and pasting the output of a failing test.
+
+h4. Strategies for using Tags
+
+FIXME: finish this section
+
+To avoid the long running full suite.
+
+h2. Step Definitions and Strategies for Developing Steps
+
+FIXME: finish this section
+
+h3. Locators
+
+FIXME: finish this section
+
+h3. Interacting with the Back-end
+
+FIXME: finish this section
+
+Pro: easy reseting of data, invocation of things that may not be in the UI, faster than executing the full sequence of steps through the UI.
+
+Con: doesn't simulate an actual user, ties feature tests to the backend, must have database access.
+
+h2. Starting with Static Mockups
+
+FIXME: finish this section
+
+h2. Getting Customers Involved
+
+FIXME: finish this section
+
+h2. Getting Business Analysts Involved
+
+FIXME: finish this section
+
+h2. Getting QA Involved
+
+FIXME: finish this section
+
+h2. Distributing the Test Suite
+
+FIXME: finish this section
+
+h1. Timing Issues and JavaScript Event Handlers
+
+Cucumber, being automated, can drive a browser much faster than a person would.  In one of my projects, this ended up exposing a timing issue in of the JavaScript code that bound event handlers to UI elements (links or buttons).  To solve the timing issue we would use a sentinal css class (@unbound@) to indicate that the handler had not yet been bound, and remove it (via jQuery) just after we'd bound the event handler.  In the step definitions we used an @xpath@ locator with a timeout allowing Selenium to wait for the handler to be bind before clicking on the element.  This also turned out to be an easy way for us to identify elements that were not getting bound - by searching for unbound elements in the browser.
 
 h2. References
 

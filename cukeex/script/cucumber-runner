@@ -1,0 +1,142 @@
+#!/usr/bin/env ruby
+require 'optparse'
+
+# Controller for running Cucumber feature tests on your Rails application.
+# Supports stopping/starting WEBRick in cucumber or test rails environment and
+# (on supporting systems, eg: Linux) runing the browser under Xnest to keep it
+# away from your other desktop activities.
+#
+#
+# Author::     Kyle Burton <kyle.burton@gmail.com>
+# Copyright::  Copyright (c) 2010 Kyle Burton
+# License::    Distributes under the same terms as Ruby
+
+#
+# Command line runner.
+#
+class CucumberRunner
+
+  # location of the rails scripts
+  SCRIPT_ROOT = File.dirname(__FILE__)
+
+  # Set up defaults, can be overridden with command line parameters.
+  def initialize
+    @opts = {
+      :env             => 'cucumber',
+      :geometry        => '1280x800',
+      :display         => ENV['DISPLAY'],
+      :xnest_display   => ':2',
+      :control_webrick => true,
+      :try_use_xnest   => true
+    }
+  end
+
+  # Determine if Xnest is present, and if it should be used (Not on OS X).
+  def use_xnest?
+    return false unless @opts[:try_use_xnest]
+    on_darwin = (`uname` =~ /Darwin/)
+    has_xnest = !(`which Xnest`.empty?)
+    !on_darwin && has_xnest
+  end
+
+  # Start Xnest in the background, save off the pid so it can be stopped later.
+  def start_xnest
+    @opts[:display] = @opts[:xnest_display]
+    cmd = "Xnest #{@opts[:xnest_display]} & echo $!"
+    @xnest_pid = `#{cmd}`.to_i
+  end
+
+  # Stop Xnest with a SIGTERM.
+  def stop_xnest
+    Process.kill("TERM", @xnest_pid) if @xnest_pid
+  end
+
+  # Stop the WEBRick server by looking for it in the proces tree.
+  def stop_webrick
+    res = `ps aux | grep [r]uby | grep [s]cript/server`
+    pid = res.split[1]
+    return unless pid
+    puts "#{$0} STOPPING WEBRick pid=#{pid}"
+    Process.kill "KILL", pid.to_i
+  end
+
+  # Start WEBRick with the configured rails environment as a daemon (background).
+  def start_webrick
+    cmd = "#{SCRIPT_ROOT}/server -e #{@opts[:env]} -d"
+    puts "#{$0} Starting WEBRick: #{cmd}"
+    system cmd
+  end
+
+  # Process any command line arguments.
+  def parse_opts
+    OptionParser.new do |opts|
+      opts.banner = "Usage: #{$0} [options]"
+
+      opts.on("-h", "--help") do 
+        puts <<-EOH
+       #{$0} [[opts]]
+
+        -e ENV  --envrionment ENV   Rails environmen to run under default=#{@opts[:env]}
+        -g GEO  --geometry GEO      Xnest geometry to use default=#{@opts[:geometry]}
+        -X      --no-xnest          Do not use Xnest (even if present)
+        -d DSP  --display DSP       DISPLAY to use default=#{@opts[:display]}
+        -x DSP  --xnest-display DSP Xnest's DISPLAY to use default=#{@opts[:xnest_display]}
+        -W      --no-webrick        Don't start WEBRick (assume running) default=false
+        EOH
+        exit 0
+      end
+
+      opts.on("-e", "--envrionment ENV") do |env|
+        @opts[:env] = env
+      end
+
+      opts.on("-g", "--geometry GEO") do |geo|
+        @opts[:geometry] = geo
+      end
+
+      opts.on("-X", "--no-xnest") do
+        options[:use_xnest] = false
+      end
+
+      opts.on("-d", "--display DSP") do |dsp|
+        options[:display] = dsp
+      end
+
+      opts.on("-x", "--xnest-display DISP") do |disp|
+        options[:xnest_display] = disp
+      end
+
+      opts.on("-W", "--no-webrick") do
+        options[:control_webrick] = false
+      end
+    end.parse!
+  end
+
+  # Process options, start Xnest, [re]start WEBRick, execute the cucumber
+  # suite, then stop Xnest and stop WEBrick
+  def run
+    parse_opts
+    start_xnest if use_xnest?
+
+    if @opts[:control_webrick]
+      stop_webrick
+      start_webrick
+    end
+
+    cmd = "#{SCRIPT_ROOT}/runner #{SCRIPT_ROOT}/cucumber #{ARGV}"
+    ENV['DISPLAY']   = @opts[:display]
+    ENV['RAILS_ENV'] = @opts[:env]
+    puts "#{$0} using RAILS_ENV=#{ENV['RAILS_ENV']}"
+    res = system cmd
+
+  ensure
+    stop_webrick  if @opts[:control_webrick]
+    stop_xnest    if @xnest_pid
+  end
+
+  def self.main
+    self.new.run
+  end
+end
+
+CucumberRunner.main
