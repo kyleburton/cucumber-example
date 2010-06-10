@@ -1,12 +1,14 @@
 h1. Testing Rails Applications with Cucumber and Chrome
 
-Example application showing how to use "Cucumber":http://cukes.info/ to test a "Ruby on Rails":http://rubyonrails.org/ web application with the "Google Chrome":http://www.google.com/chrome/?brand=CHMB&utm_campaign=en&utm_source=en-ha-na-us-sk&utm_medium=ha browser.
+This guide was written in June 2010.  As these projects change the guide may go out of sync.  If you are following it and notice that something needs to be updated, please email me, or better yet, fork the project, fix the inconsistiency and send me a pull request.
+
+Guide and example application showing how to use "Cucumber":http://cukes.info/ to test a "Ruby on Rails":http://rubyonrails.org/ web application with the "Google Chrome":http://www.google.com/chrome/?brand=CHMB&utm_campaign=en&utm_source=en-ha-na-us-sk&utm_medium=ha browser.
 
 Cucumber is a feature driven testing framework.  It uses an English-like language called "Gherkin":http://wiki.github.com/aslakhellesoy/cucumber/gherkin for writing tests and can be used to drive a Web Browser just like a user of your web application would, providing a testing experience very close to what your actual users would be seeing and experiencing.
 
-This example uses "Waitr-Webdriver":http://github.com/jarib/watir-webdriver and Chrome, the "Cucumber":http://wiki.github.com/aslakhellesoy/cucumber/ project has instruction for using other frameworks and browsers with Cucumber.
+This example uses "Waitr-Webdriver":http://github.com/jarib/watir-webdriver and Chrome, the "Cucumber":http://wiki.github.com/aslakhellesoy/cucumber/ project has instructions for using other frameworks and browsers with Cucumber.
 
-The example shows how to get cucumber installed and configured, organize and write your feature tests, how to organize step definitions and some ways for managing test fixture data.
+The example shows how to get cucumber installed and configured, organize and write your feature tests, how to organize step definitions and ways to manage your test fixture data.
 
 h3. Webdriver
 
@@ -22,19 +24,21 @@ h3. Webrat
 
 h2. Required Software
 
-If you're on Linux or OS X, these are either on your system already, or at most a few minutes away via @aptitude@, @yum@, or "@homebrew@":http://github.com/mxcl/homebrew
+If you're on Linux or OS X these may already be installed, or are at most a few minutes away via @aptitude@, @yum@, or "@homebrew@":http://github.com/mxcl/homebrew
 
 * Ruby 
 * Rails
 * Rubygems
 
-Gems
+The reqired gems are:
 
 * cucumber
 * cucumber-rails
 * webrat
 * selenium-webdriver
 * watir-webdriver (--pre is required as of 2010-06-09)
+
+To set install these gems and set up the new project, I executed the following commands:
 
 <pre>
 $ gem install cucumber
