@@ -1,4 +1,4 @@
-h1. Testing Rails Applications with Cucumber and Crhome
+h1. Testing Rails Applications with Cucumber and Chrome
 
 Example application showing how to use "Cucumber":http://cukes.info/ to test a "Ruby on Rails":http://rubyonrails.org/ web application with the "Google Chrome":http://www.google.com/chrome/?brand=CHMB&utm_campaign=en&utm_source=en-ha-na-us-sk&utm_medium=ha browser.
 
