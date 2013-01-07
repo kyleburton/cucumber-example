@@ -6,7 +6,7 @@ Guide and example application showing how to use "Cucumber":http://cukes.info/ t
 
 Cucumber is a feature driven testing framework.  It uses an English-like language called "Gherkin":http://wiki.github.com/aslakhellesoy/cucumber/gherkin for writing tests and can be used to drive a Web Browser just like a user of your web application would, providing a testing experience very close to what your actual users would be seeing and experiencing.
 
-This example uses "Waitr-Webdriver":http://github.com/jarib/watir-webdriver and Chrome, the "Cucumber":http://wiki.github.com/aslakhellesoy/cucumber/ project has instructions for using other frameworks and browsers with Cucumber.
+This example uses "Watir-Webdriver":http://github.com/jarib/watir-webdriver and Chrome, the "Cucumber":http://wiki.github.com/aslakhellesoy/cucumber/ project has instructions for using other frameworks and browsers with Cucumber.
 
 The example shows how to get cucumber installed and configured, organize and write your feature tests, how to organize step definitions and ways to manage your test fixture data.
 
@@ -14,9 +14,9 @@ h3. Webdriver
 
 "Webdriver":http://code.google.com/p/selenium/ is a browser automation framework, and as of June 2010 it is being merged with "Selenium":http://code.google.com/p/selenium/.  This is the part of the framework that scripts the web browser.  Webdriver/Selenium support "multiple browsers":http://code.google.com/p/selenium/wiki/NextSteps, though this example only shows using Chrome.
 
-h3. Waitr
+h3. Watir
 
-"Watir":http://watir.com/ is a browser automation framework.  "Waitr-webdriver":http://github.com/jarib/watir-webdriver is a Watir implementation on top of WebDriver.  This provides a higher level API than Webdriver alone, making it easier for you to write your feature step support code.
+"Watir":http://watir.com/ is a browser automation framework.  "Watir-webdriver":http://github.com/jarib/watir-webdriver is a Watir implementation on top of WebDriver.  This provides a higher level API than Webdriver alone, making it easier for you to write your feature step support code.
 
 h3. Webrat
 
